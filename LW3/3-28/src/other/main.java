@@ -121,12 +121,7 @@ public class main extends Application {
 
         newmsg.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	flag = false;
-                flag = user.createMessage(messages, inpmsg.getText(), true);
-                if(!flag)
-                	status.setText("Error! New message wasn't added");
-                else
-                	status.setText("New message added");
+            	user.createMessage(messages, inpmsg.getText(), true);
                 countmsg.setText("Messages in the topic: " + messages.size());
             }
         });
@@ -156,25 +151,15 @@ public class main extends Application {
 
         changeusr.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	flag = false;
-                flag = loguser.changeLogin(inplog.getText());
-                if(!flag)
-                	status.setText("Error! Login wasn't cahnged");
-                else
-                	status.setText("Login changed");
+            	loguser.changeLogin(inplog.getText());
             }
         });
         
         delmsg.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	flag = false;
             	name = loguser.logIn();
             	if(name.equals("Admin"))
-            		flag = admin.deleteMessage(messages);
-            	if(!flag)
-                	status.setText("Error! Message wasn't deleted");
-                else
-                	status.setText("Message was deleted");
+            		admin.deleteMessage(messages);
             	countmsg.setText("Messages in the topic: " + messages.size());
             }
         });

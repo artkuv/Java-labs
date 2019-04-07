@@ -1,5 +1,4 @@
 package users;
-import other.main;
 
 public class LoginedUser extends User{
 	
@@ -10,12 +9,15 @@ public class LoginedUser extends User{
 		login = "";
 	}
 	
-	public boolean changeLogin(String str) {
-		login = str;
-		if(login.equals(str))
-			return true;
-		else
-			return false;
+	public void changeLogin(String str) {
+		try {
+			login = str;
+			if(!login.equals(str))
+				throw new RuntimeException();
+		}
+	    catch (RuntimeException e){
+	    	System.out.println("Cannot change login");
+		}
 	}
 	
 	public  String logIn() {
@@ -27,12 +29,13 @@ public class LoginedUser extends User{
 	    	System.out.println("No login");
 	    	return "Error";
 		}
-		
-		if(login.equals("Admin123"))
-			return "Admin";
-		else {
-			DB.addToDB(login);
-			return login;
+		finally {
+			if(login.equals("Admin123"))
+				return "Admin";
+			else {
+				DB.addToDB(login);
+				return login;
+			}
 		}
 	}
 	
