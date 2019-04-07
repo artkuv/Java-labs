@@ -15,10 +15,5 @@ public class Admin extends LoginedUser{
 			return false;
 	}
 	
-	public boolean deleteUser(ArrayList<String> db, String name) {
-		if(DB.deleteFromDB(name))
-			return true;
-		else
-			return false;
-	}
+	public void deleteUser(ArrayList<String> db, String name) {	DB.deleteFromDB(name); }
 }

@@ -141,6 +141,8 @@ public class main extends Application {
                 	delmsg.setVisible(true);
                 	delusr.setVisible(true);
                 }
+                else if(name.equals("Error"))
+                	status.setText("Try one more time");
                 else
                 {
                 	status.setText("Welcome back, " + name);
@@ -173,21 +175,16 @@ public class main extends Application {
                 	status.setText("Error! Message wasn't deleted");
                 else
                 	status.setText("Message was deleted");
-            	countmsg.setText("Users in the topic: " + messages.size());
+            	countmsg.setText("Messages in the topic: " + messages.size());
             }
         });
         
         delusr.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	flag = false;
             	name = loguser.logIn();
             	if(name.equals("Admin"))
-            		flag = admin.deleteUser(db.database, inplog.getText());
-            	if(!flag)
-                	status.setText("Error! User wasn't deleted");
-                else
-                	status.setText("User was deleted");
-            	countusr.setText("Messages in the topic:" + db.database.size());
+            		admin.deleteUser(db.database, inplog.getText());
+            	countusr.setText("Users in the topic:" + db.database.size());
             }
         });
 
