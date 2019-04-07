@@ -16,21 +16,24 @@ import messages.Message;
 import users.User;
 import users.LoginedUser;
 import users.Admin;
+import users.DB;
 
 public class main extends Application {
     private Stage stage;
     private Scene scene;
     private Pane pane;
-    private Label greetings, usr, adm, counter, login, status, mode;
-    private Button giveall, newmsg, loginbtn, changeusr, del;
+    private Label greetings, usr, countmsg, countusr, login, status, mode;
+    private Button giveall, newmsg, loginbtn, changeusr, delmsg, delusr;
     private TextField inpmsg, inplog;
     boolean flag;
-    
+    String name;
+
     public void start(Stage stage){
         User user = new User();
         LoginedUser loguser = new LoginedUser();
         Admin admin = new Admin();
         ArrayList<Message> messages = new ArrayList<>();
+        DB db = new DB();
         this.stage = stage;
         stage.setTitle("Admin weekdays");
         pane = new Pane();
@@ -40,25 +43,29 @@ public class main extends Application {
         greetings = new Label("Welcome to the coolest forum in the internet");
         usr = new Label("User");
         login = new Label("Log In here");
-        adm = new Label("For Admin only");
-        counter = new Label("Messages in the topic:");
-        status = new Label("Status:");
+        countmsg = new Label("Messages in the topic: 0");
+        countusr = new Label("Users in the topic: 0");
+        status = new Label("Waiting for events");
         mode = new Label("Admin mode: OFF");
 
         giveall = new Button("Give me all messages");
         newmsg = new Button("Create new message");
         loginbtn = new Button("Log In");
         changeusr = new Button("Change user");
-        del = new Button("Delete message");
+        delusr = new Button("Delete user");
+        delmsg = new Button("Delete message");
+        delmsg.setVisible(false);
+        delusr.setVisible(false);
         giveall.setPrefSize(200,20);
         newmsg.setPrefSize(150,20);
         loginbtn.setPrefSize(80,20);
         changeusr.setPrefSize(100,20);
-        del.setPrefSize(120,20);
+        delmsg.setPrefSize(120,20);
+        delusr.setPrefSize(120,20);
         inpmsg.setPrefSize(120, 20);
         inplog.setPrefSize(140, 20);
         
-        pane.getChildren().addAll(greetings,usr,login,adm,giveall,newmsg,loginbtn,changeusr,del,status,counter,inpmsg,inplog,mode);
+        pane.getChildren().addAll(greetings,usr,login,giveall,newmsg,loginbtn,changeusr,delmsg,delusr, status,countmsg,countusr,inpmsg,inplog,mode);
         
         greetings.setLayoutX(10);
         greetings.setLayoutY(5);
@@ -68,14 +75,11 @@ public class main extends Application {
 
         login.setLayoutX(455);
         login.setLayoutY(70);
-
-        adm.setLayoutX(235);
-        adm.setLayoutY(70);
         
         mode.setLayoutX(230);
-        mode.setLayoutY(105);
+        mode.setLayoutY(70);
 
-        giveall.setLayoutX(185);
+        giveall.setLayoutX(55);
         giveall.setLayoutY(30);
 
         status.setLayoutX(140);
@@ -93,14 +97,20 @@ public class main extends Application {
         loginbtn.setLayoutX(400);
         loginbtn.setLayoutY(140);
         
-        del.setLayoutX(225);
-        del.setLayoutY(140);
+        delmsg.setLayoutX(225);
+        delmsg.setLayoutY(140);
+        
+        delusr.setLayoutX(225);
+        delusr.setLayoutY(100);
         
         changeusr.setLayoutX(490);
         changeusr.setLayoutY(140);
 
-        counter.setLayoutX(400);
-        counter.setLayoutY(5);
+        countmsg.setLayoutX(400);
+        countmsg.setLayoutY(5);
+        
+        countusr.setLayoutX(400);
+        countusr.setLayoutY(35);
 
         giveall.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -115,26 +125,30 @@ public class main extends Application {
                 flag = user.createMessage(messages, inpmsg.getText(), true);
                 if(!flag)
                 	status.setText("Error! New message wasn't added");
-                else	
+                else
                 	status.setText("New message added");
-                counter.setText("Messages in the topic:" + messages.size());
+                countmsg.setText("Messages in the topic: " + messages.size());
             }
         });
-
+        
         loginbtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	flag = false;
-                flag = loguser.logIn();
-                if(!flag)
-                {
-                	status.setText("Wrong login, try again");
-                	mode.setText("Admin mode: OFF");
-                }
-                else
+            	name = loguser.logIn();
+                if(name.equals("Admin"))
                 {
                 	status.setText("Welcome back, Admin");
                 	mode.setText("Admin mode: ON");
+                	delmsg.setVisible(true);
+                	delusr.setVisible(true);
                 }
+                else
+                {
+                	status.setText("Welcome back, " + name);
+                	mode.setText("Admin mode: OFF");
+                	delmsg.setVisible(false);
+                	delusr.setVisible(false);
+                }
+                countusr.setText("Messages in the topic:" + db.database.size());
             }
         });
 
@@ -149,16 +163,31 @@ public class main extends Application {
             }
         });
         
-        del.setOnAction(new EventHandler<ActionEvent>() {
+        delmsg.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
             	flag = false;
-            	if(loguser.logIn() == true)
+            	name = loguser.logIn();
+            	if(name.equals("Admin"))
             		flag = admin.deleteMessage(messages);
             	if(!flag)
                 	status.setText("Error! Message wasn't deleted");
                 else
                 	status.setText("Message was deleted");
-            	counter.setText("Messages in the topic:" + messages.size());
+            	countmsg.setText("Messages in the topic: " + messages.size());
+            }
+        });
+        
+        delusr.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	flag = false;
+            	name = loguser.logIn();
+            	if(name.equals("Admin"))
+            		flag = admin.deleteUser(db.database, inplog.getText());
+            	if(!flag)
+                	status.setText("Error! User wasn't deleted");
+                else
+                	status.setText("User was deleted");
+            	countusr.setText("Messages in the topic:" + db.database.size());
             }
         });
 
@@ -170,7 +199,6 @@ public class main extends Application {
 
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
     }
-
 }

@@ -2,7 +2,7 @@ package users;
 
 import java.util.ArrayList;
 
-import other.Message;
+import messages.Message;
 
 public class Admin extends LoginedUser{
     
