@@ -148,7 +148,7 @@ public class main extends Application {
                 	delmsg.setVisible(false);
                 	delusr.setVisible(false);
                 }
-                countusr.setText("Messages in the topic:" + db.database.size());
+                countusr.setText("Users in the topic:" + db.database.size());
             }
         });
 
@@ -173,7 +173,7 @@ public class main extends Application {
                 	status.setText("Error! Message wasn't deleted");
                 else
                 	status.setText("Message was deleted");
-            	countmsg.setText("Messages in the topic: " + messages.size());
+            	countmsg.setText("Users in the topic: " + messages.size());
             }
         });
         
