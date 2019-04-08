@@ -16,7 +16,7 @@ public class DB {
 		 database.add(name);
 	 }
 	 
-	 public static void deleteFromDB(String name) {
+	 public static void deleteFromDB(String name) throws RuntimeException {
 		try {
 		if(!database.remove(name))
 			throw new RuntimeException();

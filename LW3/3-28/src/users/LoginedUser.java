@@ -9,7 +9,7 @@ public class LoginedUser extends User{
 		login = "";
 	}
 	
-	public void changeLogin(String str) {
+	public void changeLogin(String str) throws RuntimeException {
 		try {
 			login = str;
 			if(!login.equals(str))
@@ -20,7 +20,7 @@ public class LoginedUser extends User{
 		}
 	}
 	
-	public  String logIn() {
+	public  String logIn() throws RuntimeException {
 		try {
 			if(login.equals(""))
 				throw new RuntimeException();
@@ -29,13 +29,12 @@ public class LoginedUser extends User{
 	    	System.out.println("No login");
 	    	return "Error";
 		}
-		finally {
-			if(login.equals("Admin123"))
-				return "Admin";
-			else {
-				DB.addToDB(login);
-				return login;
-			}
+		
+		if(login.equals("Admin123"))
+			return "Admin";
+		else {
+			DB.addToDB(login);
+			return login;
 		}
 	}
 	
