@@ -58,11 +58,16 @@ public class main extends Application {
             	if(str1.length()==str2.length())
             	{
                         for (int i = 0; i <= str1.length(); i++)
-                        {
-                            //start thread for each char
-                            //end if thread and return result(1/0)
-            		    //in dependency of 1/0 => result.setText("equal/not");
-                        }
+                        { 
+		        Comporator comp = new Comporator();	//Создание потока
+			
+			comp.start();	//Запуск потока
+			
+			try{
+				Thread.sleep(1000);
+			}catch(InterruptedException e){}
+			
+			comp.finish();	//Инициация завершения побочного потока   
             	}
             	else 
             		result.setText("Words are not equal!");
