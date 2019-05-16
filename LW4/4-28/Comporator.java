@@ -15,9 +15,9 @@ public class Comporator extends Thread
 				if(!mFinish)	//Проверка на необходимость завершения
 				{
 					if(ch1==ch2)	
-						return "Equal";
+						result.setText("Chars are equal");
 					else
-						return "Not equal";
+						result.setText("Chars are not equal");
 			        }
 				else
 					return;		//Завершение потока
