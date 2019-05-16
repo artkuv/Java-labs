@@ -57,7 +57,12 @@ public class main extends Application {
             	
             	if(str1.length()==str2.length())
             	{
-            		result.setText("одинаковы/нет");
+                        for (int i = 0; i <= str1.length(); i++)
+                        {
+                            //start thread for each char
+                            //end if thread and return result(1/0)
+            		    //in dependency of 1/0 => result.setText("equal/not");
+                        }
             	}
             	else 
             		result.setText("Words are not equal!");
