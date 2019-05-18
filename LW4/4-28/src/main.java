@@ -8,16 +8,52 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class main extends Application {
-    private Stage stage;
-    private Scene scene;
-    private Pane pane;
-    private Label num, result;
-    private Button compare;
-    private TextField first, second;
-    boolean flag;
-    String name;
 
+public class main extends Application {
+	
+	public class Comporator extends Thread
+	{
+    		private volatile boolean mFinish = false;
+
+    		public void finish()		//Инициирует завершение потока
+    		{
+    			mFinish = true;
+    		}
+
+    		public void run()
+    		{
+    			do
+    			{
+    				if(!mFinish)	//Проверка на необходимость завершения
+    				{
+    					if(ch1.equals(ch2))	
+    						flag = true;
+    					else
+    						flag = false;
+    			        }
+    				else
+    					return;		//Завершение потока
+
+    				try{
+    					Thread.sleep(100);		//Приостановка потока на 1 сек.
+    				}catch(InterruptedException e){}
+    			}
+    			while(true); 
+    		}
+    		
+    		
+    }
+	
+	public Stage stage;
+	public Scene scene;
+	public Pane pane;
+    public Label num, result;
+    public Button compare;
+    public TextField first, second;
+    public boolean flag;
+    String name;
+    public String ch1;
+	public String ch2;
     public void start(Stage stage){
         this.stage = stage;
         stage.setTitle("Comparator");
@@ -57,11 +93,29 @@ public class main extends Application {
             	
             	if(str1.length()==str2.length())
             	{
-            		result.setText("одинаковы/нет");
+                    for (int i = 0; i < str1.length(); i++)
+                    {
+                    	ch1 = str1.substring(i, i+1);
+                    	ch2 = str2.substring(i, i+1);
+                    	
+                    	Comporator comp = new Comporator();	//Создание потока
+				
+                    	comp.start();	//Запуск потока
+				
+                    	try{
+                    		Thread.sleep(1000);
+                    	}catch(InterruptedException e){}
+                    	
+                    	if(flag)
+                    		result.setText("Chars are equal");
+                    	else
+                    		result.setText("Chars are not equal");
+				
+                    	comp.finish();	//Инициация завершения побочного потока   
+	            	}
             	}
-            	else 
-            		result.setText("Words are not equal!");
-                
+	            else 
+	            		result.setText("Words are not equal!");
             }
         });
 
@@ -70,9 +124,8 @@ public class main extends Application {
         stage.setResizable(false);
         stage.show();
     }
-
-
+    
     public static void main(String[] args) {
         launch(args);
-    }
+    }  
 }
