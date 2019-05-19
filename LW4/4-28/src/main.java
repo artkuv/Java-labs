@@ -26,7 +26,7 @@ public class main extends Application {
     			{
     				if(!mFinish)	//Проверка на необходимость завершения
     				{
-    					if(ch1.equals(ch2))	
+    					if(str1.equals(str2))	
     						flag = true;
     					else
     						flag = false;
@@ -35,7 +35,7 @@ public class main extends Application {
     					return;		//Завершение потока
 
     				try{
-    					Thread.sleep(100);		//Приостановка потока на 1 сек.
+    					Thread.sleep(1000);
     				}catch(InterruptedException e){}
     			}
     			while(true); 
@@ -47,13 +47,11 @@ public class main extends Application {
 	public Stage stage;
 	public Scene scene;
 	public Pane pane;
-    public Label num, result;
+    public Label result;
     public Button compare;
     public TextField first, second;
     public boolean flag;
-    String name;
-    public String ch1;
-	public String ch2;
+    public String str1, str2;
     public void start(Stage stage){
         this.stage = stage;
         stage.setTitle("Comparator");
@@ -61,7 +59,6 @@ public class main extends Application {
 
         first = new TextField();
         second = new TextField();
-        num = new Label("");
         result = new Label("");
         compare = new Button("Comapare");
 
@@ -69,12 +66,9 @@ public class main extends Application {
         first.setPrefSize(180, 20);
         second.setPrefSize(180, 20);
         
-        pane.getChildren().addAll(first, second, num, result, compare);
-        
-        num.setLayoutX(100);
-        num.setLayoutY(100);
+        pane.getChildren().addAll(first, second, result, compare);
 
-        result.setLayoutX(200);
+        result.setLayoutX(150);
         result.setLayoutY(100);
 
         compare.setLayoutX(105);
@@ -88,34 +82,28 @@ public class main extends Application {
 
         compare.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-            	String str1 = first.getText();
-            	String str2 = second.getText();
+            	str1 = first.getText();
+            	str2 = second.getText();
             	
             	if(str1.length()==str2.length())
-            	{
-                    for (int i = 0; i < str1.length(); i++)
-                    {
-                    	ch1 = str1.substring(i, i+1);
-                    	ch2 = str2.substring(i, i+1);
-                    	
-                    	Comporator comp = new Comporator();	//Создание потока
+            	{  	
+                    Comporator comp = new Comporator();
 				
-                    	comp.start();	//Запуск потока
+                    comp.start();	//Запуск потока
 				
-                    	try{
-                    		Thread.sleep(1000);
-                    	}catch(InterruptedException e){}
-                    	
-                    	if(flag)
-                    		result.setText("Chars are equal");
-                    	else
-                    		result.setText("Chars are not equal");
-				
-                    	comp.finish();	//Инициация завершения побочного потока   
-	            	}
-            	}
-	            else 
-	            		result.setText("Words are not equal!");
+                    try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {}
+                    
+                    comp.finish();	//Инициация завершения побочного потока
+                    
+                    if(flag)
+                    	result.setText("Words are equal");
+                    else
+                    	result.setText("Words are not equal");
+	            }
+                else 
+	            	result.setText("Words length are not equal!");
             }
         });
 
